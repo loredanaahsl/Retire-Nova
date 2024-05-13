@@ -1,0 +1,47 @@
+def calculate_pension():
+    gender = input('Gender (M/F): ').upper()
+    stagiul_cotizare = float(input('Contributed Years: '))
+    venit_mediu = float(input('Monthly Insured Income: '))
+    varsta_pensionare = float(input('Retirement Age: '))
+    retirement_date = input('Retirement Date (YYYY-MM-DD): ')
+    current_date = input('Current Date (YYYY-MM-DD): ')
+
+    retirement_year = int(retirement_date.split('-')[0])
+    current_year = int(current_date.split('-')[0])
+
+    years_until_retirement = retirement_year - current_year
+    remaining_contribution_years = max(0, stagiul_cotizare - years_until_retirement)
+    P = 0
+
+    pension_type = input('Select Pension Type: ')
+    
+    if gender == 'M':
+        Vn = 32.6
+        Rn = 62.0
+    elif gender == 'F':
+        Vn = 30.0
+        Rn = 57.0
+    else:
+        print('Invalid gender input.')
+        return
+
+    if pension_type == 'ageLimit':
+        if stagiul_cotizare < 15:
+            P = 0.0135 * stagiul_cotizare * venit_mediu
+        else:
+            P = (0.014 * 30 + 0.02 * (remaining_contribution_years - Vn) + 0.02 * (varsta_pensionare - Rn)) * venit_mediu
+    elif pension_type == 'other':
+        P = 0.75 * venit_mediu
+    elif pension_type == 'disability1':
+        P = (0.42 * venit_mediu) + (stagiul_cotizare / (Vn - 18) * venit_mediu * 0.1)
+    elif pension_type == 'disability2':
+        P = (0.35 * venit_mediu) + (stagiul_cotizare / (Vn - 18) * venit_mediu * 0.1)
+    elif pension_type == 'disability3':
+        P = (0.20 * venit_mediu) + (stagiul_cotizare / (Vn - 18) * venit_mediu * 0.1)
+    else:
+        print('Invalid pension type input.')
+        return
+
+    print(f'Your estimated pension is: {P:.2f} MDL')
+
+calculate_pension()
